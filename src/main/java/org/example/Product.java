@@ -5,14 +5,20 @@ import org.example.exceptions.InvalidStockException;
 
 import javax.persistence.*;
 
+
+
+/**
+ * Entidad Product que representa un registro de la tabla "products" en la base de datos.
+ * Utiliza anotaciones de JPA/Hibernate para mapear campos y restricciones.
+ */
 @Entity
 @Table(name = "products")
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // El ID se genera automáticamente en BD
     private int id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true) // No puede ser null y debe ser único
     private String name;
 
     @Column(nullable = false)
@@ -25,10 +31,14 @@ public class Product {
 
     private String description;
 
-    // Constructor por defecto requerido por Hibernate
+    // Constructor vacio requerido por Hibernate
     public Product() {
     }
 
+    /**
+     * Constructor principal para crear productos.
+     * Valida nombre y precio antes de asignarlos.
+     */
     public Product(String name, double price, String category, String description) {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("El nombre no puede estar vacío");
@@ -43,6 +53,10 @@ public class Product {
         this.description = description;
     }
 
+    /**
+     * Constructor alternativo que permite asignar ID y stock.
+     * Reutiliza el constructor anterior para validación.
+     */
     public Product(int id, String name, double price, int stock, String category, String description) {
         this(name, price, category, description);
         this.id = id;
@@ -57,12 +71,20 @@ public class Product {
     public void setName(String name) { this.name = name; }
 
     public double getPrice() { return price; }
+
+    /**
+     * Valida que el precio nunca sea negativo.
+     */
     public void setPrice(double price) {
         if (price < 0) throw new InvalidPriceException("El precio no puede ser negativo");
         this.price = price;
     }
 
     public int getStock() { return stock; }
+
+    /**
+     * Valida que el stock nunca sea negativo.
+     */
     public void setStock(int stock) {
         if (stock < 0) throw new InvalidStockException("El stock no puede ser negativo");
         this.stock = stock;
